@@ -165,4 +165,5 @@ cython_debug/
 .ini
 
 # Zip
+*.zip
 .zip
