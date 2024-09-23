@@ -48,11 +48,6 @@ class Network(object):
 
     def feedforward(self, a): # TODO
         """Return the output of the network if ``a`` is input."""
-        activation = a
-        for weight_matrix, bias_vector in zip(self.weights, self.biases):
-            z = np.dot(weight_matrix, activation) + bias_vector
-            activation = self._activation_function(z)
-        return activation
         
 
     def SGD(self, training_data, epochs, mini_batch_size, eta,
@@ -84,20 +79,6 @@ class Network(object):
         gradient descent using backpropagation to a single mini batch.
         The ``mini_batch`` is a list of tuples ``(x, y)``, and ``eta``
         is the learning rate."""
-        gradient_b = [np.zeros(b.shape) for b in self.biases]
-        gradient_w = [np.zeros(w.shape) for w in self.weights]
-        for sample_input, sample_output in mini_batch:
-            delta_b, delta_w = self.backprop(sample_input, sample_output)
-            gradient_b = [gb + db for gb, db in zip(gradient_b, delta_b)]
-            gradient_w = [gw + dw for gw, dw in zip(gradient_w, delta_w)]
-        self.weights = [
-            w - (eta / len(mini_batch)) * gw
-            for w, gw in zip(self.weights, gradient_w)
-        ]
-        self.biases = [
-            b - (eta / len(mini_batch)) * gb
-            for b, gb in zip(self.biases, gradient_b)
-        ]
         
 
     def backprop(self, x, y):
@@ -146,25 +127,18 @@ class Network(object):
         network outputs the correct result. Note that the neural
         network's output is assumed to be the index of whichever
         neuron in the final layer has the highest activation."""
-        results = [
-            (np.argmax(self.feedforward(x)), y)
-            for (x, y) in test_data
-        ]
-        return sum(int(pred == actual) for (pred, actual) in results)
         
 
     def cost_derivative(self, output_activations, y): 
         """Return the vector of partial derivatives \partial C_x /
         \partial a for the output activations."""
-        return (output_activations-y)
+        return (output_activations-y) 
     
 #### Miscellaneous functions
 def sigmoid(z):  # TODO
     """The sigmoid function."""
-    return 1/(1+np.exp(-z))
     
 
 def sigmoid_prime(z):  # TODO
     """Derivative of the sigmoid function."""
-    s = sigmoid(z)
-    return s * (1 - s)
+    

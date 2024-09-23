@@ -51,7 +51,7 @@ class Network(object):
         activation = a
         for weight_matrix, bias_vector in zip(self.weights, self.biases):
             z = np.dot(weight_matrix, activation) + bias_vector
-            activation = self._activation_function(z)
+            activation = sigmoid(z)
         return activation
         
 
@@ -74,10 +74,10 @@ class Network(object):
                 for k in range(0, n, mini_batch_size)]
             for mini_batch in mini_batches:
                 self.update_mini_batch(mini_batch, eta)
-            if test_data:       
-                print (f"Epoch {j}: {self.evaluate(test_data)} / {n_test}")
-            else:
-                print ("Epoch {j} complete")
+            # if test_data:       
+            #     print (f"Epoch {j}: {self.evaluate(test_data)} / {n_test}")
+            # else:
+            print (f"Epoch {j} complete oot uf {epochs}")
 
     def update_mini_batch(self, mini_batch, eta):   # TODO
         """Update the network's weights and biases by applying
@@ -147,7 +147,7 @@ class Network(object):
         network's output is assumed to be the index of whichever
         neuron in the final layer has the highest activation."""
         results = [
-            (np.argmax(self.feedforward(x)), y)
+            (np.argmax(self.feedforward(x)), np.argmax(y))
             for (x, y) in test_data
         ]
         return sum(int(pred == actual) for (pred, actual) in results)
