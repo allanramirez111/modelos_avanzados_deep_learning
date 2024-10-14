@@ -1,26 +1,5 @@
-from Talleres.Taller2.Solucion.parte_practica.number_data_loader import load_data
-from Talleres.Taller2.Solucion.parte_practica.network import Network
+from Talleres.Taller3.Solucion.Network_reg import Network2
 import numpy as np
-from Talleres.Taller2.Solucion.parte_practica.plot import plot_digits, plot_predicted_digits
-
-# Función para cargar los datos
-def load_df():
-    """
-    Carga los datos de entrenamiento y prueba del dataset MNIST y grafica ejemplos de dígitos.
-    
-    Retorna:
-    - training_data (list): Lista de tuplas (x, y) para entrenamiento.
-    - test_data (list): Lista de tuplas (x, y) para prueba.
-    
-    Los datos son imágenes de dígitos (x) y sus respectivas etiquetas (y).
-    """
-    # Cargar los datos utilizando la función de number_data_loader
-    training_data, test_data = load_data()
-    
-    # Graficar ejemplos de los dígitos de entrenamiento
-    plot_digits(training_data)
-    
-    return training_data, test_data  # Retornar los conjuntos de datos
 
 # Función para entrenar la red neuronal
 def entrenar_red(dict_config, training_data, test_data):
@@ -40,12 +19,15 @@ def entrenar_red(dict_config, training_data, test_data):
     epochs = dict_config['epochs']  # Número de épocas
     mini_batch_size = dict_config['mini_batch_size']  # Tamaño de mini-lote
     eta = dict_config['eta']  # Tasa de aprendizaje
+    lmbda = dict_config['lmbda']  # Tasa de aprendizaje
+    regularization = dict_config['regularization']  # Tasa de aprendizaje
+    
 
     # Crear una instancia de la red neuronal con la arquitectura especificada
-    net = Network(architecture)
+    net = Network2(architecture)
     
     # Entrenar la red utilizando el algoritmo SGD
-    net.SGD(training_data, epochs, mini_batch_size, eta, test_data=test_data)
+    net.SGD(training_data, epochs, mini_batch_size, eta, lmbda, regularization, test_data=test_data)
     
     # Añadir red a diccionario
     dict_config['red'] = net
@@ -101,38 +83,3 @@ def entrenar_y_medir(config, training_data, test_data):
     print(f"Precisión de la red: {precision:.2f}%")
     
     return net, precision
-
-# Función principal
-def main():
-    """
-    Función principal que ejecuta el flujo del programa: carga los datos, los grafica, entrena la red y devuelve la red entrenada.
-    
-    La configuración por defecto incluye una red neuronal con una capa oculta de 30 neuronas,
-    entrenada durante 30 épocas con una tasa de aprendizaje de 0.1.
-    """
-    # Configuración por defecto de la red neuronal
-    config = {
-        'architecture': [784, 30, 10],  # 784 neuronas en la entrada, 30 en la capa oculta y 10 en la salida
-        'epochs': 30,  # Número de épocas de entrenamiento
-        'mini_batch_size': 10,  # Tamaño de los mini-lotes
-        'eta': 0.1  # Tasa de aprendizaje
-    }
-
-    # Cargar los datos de entrenamiento y prueba
-    training_data, test_data = load_df()
-
-    # Entrenar la red neuronal
-    net = entrenar_y_medir(config, training_data, test_data)
-    
-    # Graficar resultados
-    plot_predicted_digits(net, test_data)
-    
-    # Imprimmir precisión
-    print(f"Precisión de la red: {config['precision']:.2f}%")
-    
-    return
-
-# Ejecución principal
-if __name__ == "__main__":
-    # Ejecutar la función principal
-    main()
